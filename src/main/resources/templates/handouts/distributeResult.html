@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Handout Distribution Result</title>
+    <link rel="stylesheet" href="/css/distributeHandout.css">
+</head>
+<body>
+<div class="container">
+    <h1>Handout Distribution Result</h1>
+    <div class="team-section">
+        <h2>Team A Handouts</h2>
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Handout Name</th>
+                <th>Week</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="handout : ${handoutTeam1}">
+                <td th:text="${handout.week} + ' 주차'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="team-section">
+        <h2>Team B Handouts</h2>
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Handout Name</th>
+                <th>Week</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="handout : ${handoutTeam2}">
+                <td th:text="${handout.week} + ' 주차'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

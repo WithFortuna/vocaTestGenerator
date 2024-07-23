@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>단어 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>단어 목록</h1>
+<table>
+    <thead>
+    <tr>
+        <th>영어 단어</th>
+        <th>한국어 뜻</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="voca : ${vocabs}">
+        <td th:text="${voca.english}"></td>
+        <td th:text="${voca.korean}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

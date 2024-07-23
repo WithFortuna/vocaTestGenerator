@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>단어 등록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        label, input, button {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>단어 등록 페이지</h1>
+<form action="#" th:action="@{/vocabs/register}" th:object="${vocaForm}" method="post">
+    <label for="english">영어 단어:</label>
+    <input type="text" id="english" th:field="*{english}" required>
+    <div class="error" th:if="${#fields.hasErrors('english')}" th:errors="*{english}"></div>
+
+    <label for="korean">한국어 뜻:</label>
+    <input type="text" id="korean" th:field="*{korean}" required>
+    <div class="error" th:if="${#fields.hasErrors('korean')}" th:errors="*{korean}"></div>
+
+    <button type="submit">등록</button>
+</form>
+</body>
+</html>

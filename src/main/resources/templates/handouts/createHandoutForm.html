@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>단어장 생성</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .vocab-list {
+            margin-bottom: 20px;
+        }
+        .vocab-item {
+            display: flex;
+            align-items: center;
+        }
+        .vocab-item input {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>단어장 생성</h1>
+<form action="#" th:action="@{/handouts/new}" method="post">
+    <div class="input-group">
+        <label for="week">주차</label>
+        <input type="text" id="week" name="week" class="form-control" required>
+    </div>
+    <div class="vocab-list">
+        <div th:each="voca : ${vocabs}" class="vocab-item">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" th:name="selectedVocas" th:value="${voca.id}" th:id="*{#strings.concat('voca_', voca.id)}">
+                <label class="form-check-label" th:for="${'voca_' + voca.id}" th:text="${voca.english + ' - ' + voca.korean}"></label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">단어장 생성</button>
+</form>
+<!-- Bootstrap JS 및 jQuery 추가 -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

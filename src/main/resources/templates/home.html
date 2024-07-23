@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>단어 생성 및 출제 프로그램</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>단어 생성 및 출제 프로그램</h1>
+<div class="button-container">
+    <button onclick="location.href='/students/register'">학생등록</button>
+    <button onclick="location.href='/students'">학생목록</button>
+    <button onclick="location.href='/vocabs/register'">단어등록</button>
+    <button onclick="location.href='/vocabs'">단어 목록</button>
+    <button onclick="location.href='/handouts/new'">단어장생성</button>
+    <button onclick="location.href='/handouts'">단어장 목록</button>
+    <button onclick="location.href='/tests/new'">시험지 생성</button>
+    <button onclick="location.href='/tests'">시험지 목록</button>
+    <button onclick="location.href='/handouts/distribute'">단어장 배포</button>
+    <button onclick="location.href='/tests/distribute'">시험지 배포</button>
+</div>
+</body>
+</html>

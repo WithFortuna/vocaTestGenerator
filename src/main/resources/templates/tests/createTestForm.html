@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Test</title>
+    <link rel="stylesheet" type="text/css" href="/css/createTest.css">
+    <script type="text/javascript">
+        window.onload = function() {
+            var selections = [];
+
+            window.selectTestType = function(type, vocaId) {
+                console.log("Button clicked - Type:", type, "VocaId:", vocaId);
+                var existing = selections.find(selection => selection.vocaId === vocaId);
+                if (existing) {
+                    existing.type = type;
+                } else {
+                    selections.push({vocaId: vocaId, type: type});
+                }
+                updateTestSelectionsInput();
+            }
+
+            function updateTestSelectionsInput() {
+                var jsonValue = JSON.stringify(selections);
+                document.getElementById('testSelections').value = jsonValue;
+                console.log("testSelections value:", jsonValue);
+            }
+
+            window.validateForm = function() {
+                if (selections.length === 0) {
+                    alert("적어도 하나의 단어를 선택해주세요.");
+                    return false;
+                }
+                return true;
+            }
+        }
+    </script>
+</head>
+<body>
+<h1 th:text="'Create Test for ' + ${handout.week} + ' 주차'"></h1>
+
+<form action="#" th:action="@{/tests/new/create}" method="post" onsubmit="return validateForm()">
+    <input type="hidden" name="handoutId" th:value="${handout.id}" />
+    <input type="hidden" name="week" th:value="${handout.week}" />
+    <table>
+        <thead>
+        <tr>
+            <th>영어 단어</th>
+            <th>한국어 뜻</th>
+            <th>출제 선택</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vocaHandout : ${vocabs}">
+            <td th:text="${vocaHandout.voca.english}"></td>
+            <td th:text="${vocaHandout.voca.korean}"></td>
+            <td>
+                <button type="button" th:onclick="'selectTestType(\'english\', ' + ${vocaHandout.voca.id} + ')'">영어 출제</button>
+                <button type="button" th:onclick="'selectTestType(\'korean\', ' + ${vocaHandout.voca.id} + ')'">한국어 출제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="testSelections" name="testSelections" value="">
+    <button type="submit">Create Test</button>
+</form>
+</body>
+</html>

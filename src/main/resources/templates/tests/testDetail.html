@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Detail</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .styled-table th, .styled-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .styled-table th {
+            background-color: #f2f2f2;
+            color: #333333;
+        }
+
+        .styled-table tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Test Detail</h1>
+    <div class="test-info">
+        <h2 th:text="${test.week + '주차 테스트'}"></h2>
+    </div>
+
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>Korean</th>
+            <th>English</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vocaBlock : ${vocaBlocks}">
+            <td th:text="${vocaBlock.korean}"></td>
+            <td th:text="${vocaBlock.english}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
