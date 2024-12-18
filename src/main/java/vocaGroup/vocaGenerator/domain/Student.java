@@ -12,9 +12,8 @@ public class Student {
 
     private String name;
     private int age;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEAM_ID")
     private Team team;
-
     public Student() {
     }
 

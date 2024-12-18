@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vocaGroup.vocaGenerator.domain.*;
 import vocaGroup.vocaGenerator.domain.DTO.TestForm;
+import vocaGroup.vocaGenerator.repository.TeamRepository;
 import vocaGroup.vocaGenerator.service.HandoutService;
 import vocaGroup.vocaGenerator.service.StudentService;
 import vocaGroup.vocaGenerator.service.TestService;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class TestController {
     private final TestService testService;
     private final StudentService studentService;
     private final ObjectMapper objectMapper;
+    private final TeamRepository teamRepository;
 
     //==============================================================test생성
     @GetMapping("tests/new")
@@ -106,16 +109,18 @@ public class TestController {
         List<Test> tests = testService.findAll();
         model.addAttribute("tests", tests);
 
-        List<Team> teams = Arrays.asList(Team.values());
+
+        List<Team> teams = teamRepository.findAll();
         model.addAttribute("teams", teams);
 
         return "/tests/distributeTest";
     }
 
     @PostMapping("tests/distribute")
-    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Team teamSelection, Model model) {
+    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Team teamSelectionId, Model model) {
+        //Test를 선택된 Team에게 배포
         System.out.println("=======================================================");
-        List<Student> students = studentService.findByTeam(teamSelection);
+        List<Student> students = studentService.findByTeam(teamSelectionId);
         System.out.println("=======================================================");
         for (Long id : testSelections) {
             for (Student s : students) {
@@ -124,20 +129,16 @@ public class TestController {
 
         }
 
-        List<Team> teams = Arrays.asList(Team.values());
+        //Team별 Test조회
+        List<Team> teams = teamRepository.findAll();
+        Map<String, List<Test>> testsByTeam = new HashMap<>();
+        for (Team team : teams) {
+            List<Test> tests = testService.findTestByTeam(team);
+            testsByTeam.put(team.getTeamName(), tests);
+        }
+
         model.addAttribute("teams", teams);
-        List<Test> testTeam1 = testService.findTestByTeam(Team.A);
-        List<Test> testTeam2 = testService.findTestByTeam(Team.B);
-/*
-
-        System.out.println("=====================================================");
-        System.out.println(testTeam1);
-        System.out.println(testTeam2);
-        System.out.println("=====================================================");
-*/
-
-        model.addAttribute("testTeam1", testTeam1);
-        model.addAttribute("testTeam2", testTeam2);
+        model.addAttribute("testsByTeam", testsByTeam);
 
         return "/tests/distributeResult";
     }

@@ -36,8 +36,8 @@ public class StudentService {
     }
 
 
-    public List<Student> findByTeam(Team team) {
-        List<Student> studentList = studentRepository.findByTeam(team);
+    public List<Student> findByTeam(Team teamId) {
+        List<Student> studentList = studentRepository.findByTeam(teamId);
         return studentList;
     }
 }

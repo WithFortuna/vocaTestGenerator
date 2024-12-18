@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vocaGroup.vocaGenerator.domain.*;
-import vocaGroup.vocaGenerator.domain.DTO.HandoutForm;
+import vocaGroup.vocaGenerator.repository.TeamRepository;
 import vocaGroup.vocaGenerator.service.HandoutService;
 import vocaGroup.vocaGenerator.service.StudentService;
 import vocaGroup.vocaGenerator.service.VocaService;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class HandoutController {
     private final HandoutService handoutService;
     private final VocaService vocaService;
     private final StudentService studentService;
+    private final TeamRepository teamRepository;
 
     //===================================================================handout만들기
     //사용자에게 객체 여러개를 선택받고 싶을 때(by id)
@@ -69,8 +72,17 @@ public class HandoutController {
 
     @GetMapping("/handouts/distribute")
     public String distributeHandout(Model model) {
+/* ver1
         List<Handout> handouts = handoutService.findAll();
         List<Team> teams = Arrays.asList(Team.values()); //enum타입의 값들을 List로.
+
+        model.addAttribute("handouts", handouts);
+        model.addAttribute("teams", teams); //enum값도 다른 객체와 전혀 다르지 않게 view와 상호작용한다.
+*/
+//ver2
+
+        List<Handout> handouts = handoutService.findAll();
+        List<Team> teams = teamRepository.findAll();
 
         model.addAttribute("handouts", handouts);
         model.addAttribute("teams", teams); //enum값도 다른 객체와 전혀 다르지 않게 view와 상호작용한다.
@@ -79,19 +91,27 @@ public class HandoutController {
     }
 
     @PostMapping("/handouts/distribute")
-    public String distribute(@RequestParam List<Long> handoutSelections, @RequestParam Team teamSelection, Model model) {
-        List<Student> students = studentService.findByTeam(teamSelection);
+    public String distribute(@RequestParam List<Long> handoutSelections, @RequestParam Team teamSelectionId, Model model) {
+        //해당 팀에게 handout 할당
+        List<Student> students = studentService.findByTeam(teamSelectionId);
         for (Long i : handoutSelections) {
             for (Student s : students) {
                 handoutService.passHandout(i,s);
             }
         }
-        List<Team> teams = Arrays.asList(Team.values());
+
+        //팀별 handout 조회
+        List<Team> teams = teamRepository.findAll();
+        Map<String, List<Handout>> handoutsByTeam = new HashMap<>(); //팀별 handout 저장
         model.addAttribute("teams", teams);
-        List<Handout> handoutTeam1 = handoutService.findHandoutByTeam(Team.A);
-        List<Handout> handoutTeam2 = handoutService.findHandoutByTeam(Team.B);
-        model.addAttribute("handoutTeam1", handoutTeam1);
-        model.addAttribute("handoutTeam2", handoutTeam2);
+
+        for (Team team : teams) {
+            List<Handout> handoutTeam = handoutService.findHandoutByTeam(team);
+            handoutsByTeam.put(team.getTeamName(), handoutTeam);
+        }
+
+
+        model.addAttribute("handoutsByTeam", handoutsByTeam);
         return "/handouts/distributeResult";
     }
 }
