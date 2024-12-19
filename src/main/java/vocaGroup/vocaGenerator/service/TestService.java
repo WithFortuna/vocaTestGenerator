@@ -72,8 +72,8 @@ public class TestService {
         testRepository.saveStudentTest(studentTest);
     }
 
-    public List<Test> findTestByTeam(Team team) {
-        List<Test> tests = testRepository.findTestByTeam(team);
+    public List<Test> findTestByTeam(Long id) {
+        List<Test> tests = testRepository.findTestByTeam(id);
         return tests;
     }
 }

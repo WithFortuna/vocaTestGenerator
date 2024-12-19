@@ -42,13 +42,19 @@ public class HandoutRepository {
         em.persist(studentHandout);
     }
 
-    public List<Handout> findStudentHandoutByTeam(Team team) {
+    public List<Handout> findStudentHandoutByTeam(Long id) {
         List<Handout> handouts = em.createQuery("select distinct h from Handout h inner join StudentHandout s on h.id = s.handout.id " +
-                                "where s.student.team = :team " +
+                                "where s.student.team.id = :teamId " +
                                 "group by h.id",
                         Handout.class)
-                .setParameter("team", team)
+                .setParameter("teamId", id)
                 .getResultList();
+
+        System.out.println("=========================handout조회결과");
+        for (Handout h : handouts) {
+            System.out.println(h.getId());
+        }
+        System.out.println("=========================handout조회결과");
         return handouts;
 
     }

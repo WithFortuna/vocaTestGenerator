@@ -34,6 +34,15 @@
         .error {
             color: red;
         }
+        .no-teams {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .no-teams a {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -47,9 +56,14 @@
     <input type="number" id="age" th:field="*{age}" required>
     <div class="error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
 
-    <label for="team">팀:</label>
-    <input type="text" id="team" th:field="*{team}" required>
-    <div class="error" th:if="${#fields.hasErrors('team')}" th:errors="*{team}"></div>
+    <label>팀:</label>
+    <div th:if="${teams.size() == 0}" class="no-teams">
+        팀이 없습니다. <a th:href="@{/teams/new}">팀을 생성하세요</a>.
+    </div>
+    <div th:each="team : ${teams}" th:if="${teams.size() > 0}">
+        <input type="radio" th:id="${'team_' + team.id}" th:name="teamId" th:value="${team.id}" required>
+        <label th:for="${'team_' + team.id}" th:text="${team.teamName}"></label>
+    </div>
 
     <button type="submit">등록</button>
 </form>

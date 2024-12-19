@@ -34,7 +34,7 @@ public class VocaController {
         Voca voca = new Voca(vocaForm.getEnglish(), vocaForm.getKorean());
         vocaService.join(voca);
 
-        return "redirect:/";
+        return "redirect:/vocabs/register";
     }
 
     @GetMapping("/vocabs")

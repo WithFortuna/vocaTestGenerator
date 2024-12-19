@@ -73,7 +73,7 @@ public class TestController {
             // testForms 리스트를 사용하여 테스트를 생성
             testService.createVocaTest(testForms, test.getId());
 
-            return "redirect:/tests/new"; // 테스트 목록 페이지로 리다이렉트
+            return "redirect:/"; // 홈 페이지로 리다이렉트
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             model.addAttribute("error", "Failed to process test selections.");
@@ -117,7 +117,7 @@ public class TestController {
     }
 
     @PostMapping("tests/distribute")
-    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Team teamSelectionId, Model model) {
+    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Long teamSelectionId, Model model) {
         //Test를 선택된 Team에게 배포
         System.out.println("=======================================================");
         List<Student> students = studentService.findByTeam(teamSelectionId);
@@ -133,7 +133,7 @@ public class TestController {
         List<Team> teams = teamRepository.findAll();
         Map<String, List<Test>> testsByTeam = new HashMap<>();
         for (Team team : teams) {
-            List<Test> tests = testService.findTestByTeam(team);
+            List<Test> tests = testService.findTestByTeam(team.getId());
             testsByTeam.put(team.getTeamName(), tests);
         }
 

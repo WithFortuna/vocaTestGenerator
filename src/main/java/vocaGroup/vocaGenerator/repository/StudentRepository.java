@@ -34,7 +34,7 @@ public class StudentRepository {
         return findStudents;
     }
 
-    public List<Student> findByTeam(Team teamId) {
+    public List<Student> findByTeam(Long teamId) {
 
         List<Student> studentList = em.createQuery("select s from Student s where s.team.id = :teamId", Student.class)
                 .setParameter("teamId",teamId)

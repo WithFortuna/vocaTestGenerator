@@ -91,7 +91,7 @@ public class HandoutController {
     }
 
     @PostMapping("/handouts/distribute")
-    public String distribute(@RequestParam List<Long> handoutSelections, @RequestParam Team teamSelectionId, Model model) {
+    public String distribute(@RequestParam List<Long> handoutSelections, @RequestParam Long teamSelectionId, Model model) {
         //해당 팀에게 handout 할당
         List<Student> students = studentService.findByTeam(teamSelectionId);
         for (Long i : handoutSelections) {
@@ -106,7 +106,7 @@ public class HandoutController {
         model.addAttribute("teams", teams);
 
         for (Team team : teams) {
-            List<Handout> handoutTeam = handoutService.findHandoutByTeam(team);
+            List<Handout> handoutTeam = handoutService.findHandoutByTeam(team.getId());
             handoutsByTeam.put(team.getTeamName(), handoutTeam);
         }
 

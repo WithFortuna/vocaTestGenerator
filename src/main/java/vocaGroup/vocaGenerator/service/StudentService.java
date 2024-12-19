@@ -36,7 +36,7 @@ public class StudentService {
     }
 
 
-    public List<Student> findByTeam(Team teamId) {
+    public List<Student> findByTeam(Long teamId) {
         List<Student> studentList = studentRepository.findByTeam(teamId);
         return studentList;
     }

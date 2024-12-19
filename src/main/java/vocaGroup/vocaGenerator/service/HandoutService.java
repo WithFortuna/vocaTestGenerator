@@ -42,8 +42,8 @@ public class HandoutService {
         return handoutRepository.findAll();
     }
 
-    public List<Handout> findHandoutByTeam(Team team) {
-        List<Handout> handoutByTeam = handoutRepository.findStudentHandoutByTeam(team);//각 팀별로, Handout기준으로 중복없이 Handout을 가져옴
+    public List<Handout> findHandoutByTeam(Long id) {
+        List<Handout> handoutByTeam = handoutRepository.findStudentHandoutByTeam(id);//각 팀별로, Handout기준으로 중복없이 Handout을 가져옴
         return handoutByTeam;
     }
 

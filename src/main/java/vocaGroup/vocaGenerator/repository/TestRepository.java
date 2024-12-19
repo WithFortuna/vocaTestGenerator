@@ -43,11 +43,11 @@ public class TestRepository {
         em.persist(studentTest);
     }
 
-    public List<Test> findTestByTeam(Team team) {  //찾는 대상: StudentTest에 있으면서 & StudentTest.student.Team = :team 이고& 중복을 없애고 & Team_Id&로 묶은 Test 객체.
+    public List<Test> findTestByTeam(Long id) {  //찾는 대상: StudentTest에 있으면서 & StudentTest.student.Team = :team 이고& 중복을 없애고 & Team_Id&로 묶은 Test 객체.
         List<Test> tests = em.createQuery("select distinct t from Test t inner join StudentTest s on t.id = s.test.id " +
-                        "where s.student.team = :team " +
+                        "where s.student.team.id = :teamId " +
                         "group by t.id", Test.class)
-                .setParameter("team", team)
+                .setParameter("teamId", id)
                 .getResultList();
 
         return tests;

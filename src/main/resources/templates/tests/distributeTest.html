@@ -38,7 +38,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="team : ${teams}">
-                        <td><input type="radio" th:id="${'team-' + team.teamName}" th:value="${team.id}" name="teamSelection"></td>
+                        <td><input type="radio" th:id="${'team-' + team.teamName}" th:value="${team.id}" name="teamSelectionId"></td>
                         <td th:text="${team.teamName}"></td>
                     </tr>
                     </tbody>
