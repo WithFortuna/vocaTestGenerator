@@ -20,11 +20,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("user not found");
         }
 
+/*
         return org.springframework.security.core.userdetails.User.builder()
                 .username(findUser.getUsername())
                 .password(findUser.getPassword())
                 .roles(findUser.getRole().name())   //"ROLE_" 접두사 자동 추가 cf) .authorities(new SimpleGrantedAuthority(findUser.getRole.getKey()))
                 .build();
+*/
+        return new CustomUserDetails(findUser);
 
     }
 }

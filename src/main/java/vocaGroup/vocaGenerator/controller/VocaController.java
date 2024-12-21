@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import vocaGroup.vocaGenerator.domain.DTO.VocaForm;
+import vocaGroup.vocaGenerator.domain.User;
 import vocaGroup.vocaGenerator.domain.Voca;
+import vocaGroup.vocaGenerator.login.utility.SecurityUtil;
 import vocaGroup.vocaGenerator.service.VocaService;
 
 import java.util.List;
@@ -31,7 +33,9 @@ public class VocaController {
         if (result.hasErrors()) {
             return "studetns/createStudentForm";
         }
-        Voca voca = new Voca(vocaForm.getEnglish(), vocaForm.getKorean());
+        User currentUser = SecurityUtil.getCurrentUser();
+        Voca voca = new Voca(vocaForm.getEnglish(), vocaForm.getKorean(), currentUser);
+
         vocaService.join(voca);
 
         return "redirect:/vocabs/register";
@@ -39,7 +43,8 @@ public class VocaController {
 
     @GetMapping("/vocabs")
     public String showList(Model model) {
-        List<Voca> vocabs = vocaService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Voca> vocabs = vocaService.findAll(userId);
         model.addAttribute("vocabs", vocabs);
         return "/vocabs/vocaList";
     }

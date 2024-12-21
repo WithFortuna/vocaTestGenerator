@@ -24,8 +24,9 @@ public class TeamRepository {
         return em.find(Team.class, id);
     }
 
-    public List<Team> findAll() {
-        List<Team> teams = em.createQuery("select t from Team t", Team.class)
+    public List<Team> findAll(Long userId) {
+        List<Team> teams = em.createQuery("select t from Team t where t.user.id = :userId", Team.class)
+                .setParameter("userId", userId)
                 .getResultList();
         return teams;
     }

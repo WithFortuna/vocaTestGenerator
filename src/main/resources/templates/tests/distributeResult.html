@@ -15,21 +15,27 @@
             <!-- 팀 이름 출력 -->
             <h2 th:text="'Team: ' + ${entry.key}"></h2>
 
+            <!-- 학생이 없는 경우 메시지 표시 -->
+            <div th:if="${entry.value.equals('No Students')}">
+                <p>속한 학생이 없습니다.</p>
+            </div>
+
             <!-- Test 리스트 출력 -->
-            <table class="styled-table">
-                <thead>
-                <tr>
-                    <th>Test Name</th>
-                    <th>Week</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="test : ${entry.value}">
-<!--                    <td th:text="${test.name}"></td>-->
-                    <td th:text="${test.week} + ' 주차'"></td>
-                </tr>
-                </tbody>
-            </table>
+            <div th:if="${!entry.value.equals('No Students')}">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Week</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="test : ${entry.value}">
+                        <td th:text="${test.week} + ' 주차'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

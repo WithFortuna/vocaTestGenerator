@@ -31,8 +31,8 @@ public class StudentService {
         return studentRepository.findById(id);
     }
 
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public List<Student> findAll(Long userId) {
+        return studentRepository.findAll(userId);
     }
 
 

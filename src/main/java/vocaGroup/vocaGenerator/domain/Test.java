@@ -19,16 +19,18 @@ public class Test {
     private Handout handout;
     @ElementCollection @CollectionTable(name = "TEST_VOCABS", joinColumns = @JoinColumn(name = "TEST_ID"))
     private List<VocaBlock> testVocabs = new ArrayList<>(); //collection 타입 변수.( 이때 VocaBlock 클래스는 @Embeddable 이 필요함)
-
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
     public Test() {
     }
 
     public Test(Handout handout) {
         this.handout=handout;
     }
-    public Test(String week, Handout handout) {
+    public Test(String week, Handout handout, User user) {
         this.week = week;
         this.handout = handout;
+        this.user = user;
     }
 
     /*비즈니스 로직*/

@@ -48,6 +48,11 @@
 </head>
 <body>
 <div class="container">
+
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${errors}" class="alert alert-danger" role="alert">
+        <strong th:text="${errors}"></strong>
+    </div>
     <h1>Test Detail</h1>
     <div class="test-info">
         <h2 th:text="${test.week + '주차 테스트'}"></h2>

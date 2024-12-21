@@ -39,7 +39,7 @@
 <body>
 <div class="container">
     <h1>팀 등록</h1>
-    <form action="/teams/new" method="post">
+    <form id="test-form" th:action="@{/teams/new}" method="post">
         <div class="form-group">
             <label for="teamName">팀 이름: </label>
             <input type="text" class="form-control" id="teamName" name="teamName" placeholder="팀 이름을 입력하시오" required>

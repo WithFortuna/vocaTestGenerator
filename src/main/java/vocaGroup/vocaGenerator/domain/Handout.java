@@ -16,13 +16,15 @@ public class Handout {
 
     @OneToMany(mappedBy = "handout")
     private List<VocaHandout> vocabs = new ArrayList<>(); //단어 추가는 메서드로.
-
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
 
     public Handout() {
     }
 
-    public Handout(String week) {
+    public Handout(String week, User user) {
         this.week = week;
+        this.user=user;
 
     }
 

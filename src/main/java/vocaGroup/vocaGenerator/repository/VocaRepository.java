@@ -31,8 +31,9 @@ public class VocaRepository {
         return em.find(Voca.class, id);
     }
 
-    public List<Voca> findAll() {
-        List<Voca> findVocas = em.createQuery("select v from Voca v", Voca.class)
+    public List<Voca> findAll(Long userId) {
+        List<Voca> findVocas = em.createQuery("select v from Voca v where v.user.id = :userId", Voca.class)
+                .setParameter("userId",userId)
                 .getResultList();
         return findVocas;
     }

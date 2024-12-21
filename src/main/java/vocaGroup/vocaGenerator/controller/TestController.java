@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vocaGroup.vocaGenerator.domain.*;
 import vocaGroup.vocaGenerator.domain.DTO.TestForm;
+import vocaGroup.vocaGenerator.login.utility.SecurityUtil;
 import vocaGroup.vocaGenerator.repository.TeamRepository;
 import vocaGroup.vocaGenerator.service.HandoutService;
 import vocaGroup.vocaGenerator.service.StudentService;
@@ -34,7 +35,8 @@ public class TestController {
     //==============================================================test생성
     @GetMapping("tests/new")
     public String createTest1(Model model) {
-        List<Handout> handouts = handoutService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Handout> handouts = handoutService.findAll(userId);
         model.addAttribute("handouts", handouts);
         return "/handouts/handoutList2";
     }
@@ -60,8 +62,9 @@ public class TestController {
             System.out.println("Received testSelections: " + testSelections); //json 배열 출력
             System.out.println("==========================================================");
         }
+        User currentUser = SecurityUtil.getCurrentUser();
         Handout findHandout = handoutService.findById(handoutId);
-        Test test = new Test(week, findHandout);
+        Test test = new Test(week, findHandout, currentUser);
         testService.save(test);
         try {
             List<TestForm> testForms = objectMapper.readValue(testSelections, new TypeReference<List<TestForm>>() {
@@ -87,7 +90,9 @@ public class TestController {
     //==================================================================test조회
     @GetMapping("/tests")
     public String showList(Model model) {
-        List<Test> tests = testService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+
+        List<Test> tests = testService.findAll(userId);
         model.addAttribute("tests", tests);
         return "/tests/testList";
     }
@@ -95,6 +100,14 @@ public class TestController {
     @GetMapping("/tests/{id}")
     public String showDetail(@PathVariable Long id, Model model) {
         Test findTest = testService.findById(id);
+        boolean isOwner = SecurityUtil.getCurrentUser().getId().equals(findTest.getUser().getId());
+
+        if (!isOwner) {
+
+            model.addAttribute("errors", "권한 없음");
+            return "/tests/testDetail";
+        }
+
         List<VocaBlock> vocaBlocks = findTest.getTestVocabs();
         model.addAttribute("test", findTest);
         model.addAttribute("vocaBlocks", vocaBlocks);
@@ -106,11 +119,12 @@ public class TestController {
 
     @GetMapping("tests/distribute")
     public String distributeTest(Model model) {
-        List<Test> tests = testService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Test> tests = testService.findAll(userId);
         model.addAttribute("tests", tests);
 
 
-        List<Team> teams = teamRepository.findAll();
+        List<Team> teams = teamRepository.findAll(userId);
         model.addAttribute("teams", teams);
 
         return "/tests/distributeTest";
@@ -130,11 +144,20 @@ public class TestController {
         }
 
         //Team별 Test조회
-        List<Team> teams = teamRepository.findAll();
-        Map<String, List<Test>> testsByTeam = new HashMap<>();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Team> teams = teamRepository.findAll(userId);
+        Map<String, Object> testsByTeam = new HashMap<>();
         for (Team team : teams) {
-            List<Test> tests = testService.findTestByTeam(team.getId());
-            testsByTeam.put(team.getTeamName(), tests);
+            //Team에 속한 학생이 없어서 test가 안보이는 경우
+            boolean isTeamNoStudents = studentService.findByTeam(team.getId()).isEmpty();
+            if (isTeamNoStudents) {
+                testsByTeam.put(team.getTeamName(), "No Students");      //문자열 삽입
+            } else {
+                //Team에 속한 학생이 존재하는 경우
+                List<Test> tests = testService.findTestByTeam(team.getId());
+                testsByTeam.put(team.getTeamName(), tests);
+            }
+
         }
 
         model.addAttribute("teams", teams);

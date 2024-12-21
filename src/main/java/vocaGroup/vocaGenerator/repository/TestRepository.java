@@ -32,8 +32,9 @@ public class TestRepository {
         return em.find(Test.class, id);
     }
 
-    public List<Test> findAll() {
-        List<Test> findTests = em.createQuery("select t from Test t ", Test.class)
+    public List<Test> findAll(Long userId) {
+        List<Test> findTests = em.createQuery("select t from Test t where t.user.id = :userId ", Test.class)
+                .setParameter("userId",userId)
                 .getResultList();
         return findTests;
     }

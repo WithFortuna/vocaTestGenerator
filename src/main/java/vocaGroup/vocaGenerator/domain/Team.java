@@ -11,8 +11,11 @@ public class Team {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String teamName;
-
-    public Team(String teamName) {
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
+    public Team(String teamName, User user) {
         this.teamName = teamName;
+        this.user = user;
     }
+
 }

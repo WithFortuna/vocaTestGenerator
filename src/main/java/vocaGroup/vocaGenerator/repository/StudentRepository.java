@@ -28,8 +28,9 @@ public class StudentRepository {
         return em.find(Student.class, id);
     }
 
-    public List<Student> findAll() {
-        List<Student> findStudents = em.createQuery("select s from Student s ", Student.class)
+    public List<Student> findAll(Long userId) {
+        List<Student> findStudents = em.createQuery("select s from Student s where s.user.id = :userId ", Student.class)
+                .setParameter("userId",userId)
                 .getResultList();
         return findStudents;
     }

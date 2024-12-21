@@ -15,13 +15,16 @@ public class Voca {
     private String korean;
     @Enumerated(EnumType.STRING)
     private Choose choose;
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
 
     public Voca() {
     }
 
-    public Voca(String english, String korean) {
+    public Voca(String english, String korean, User user) {
         this.english = english;
         this.korean = korean;
+        this.user = user;
     }
 
     public void setChoose(Choose choose) {

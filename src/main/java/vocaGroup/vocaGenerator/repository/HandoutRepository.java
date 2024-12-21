@@ -31,8 +31,9 @@ public class HandoutRepository {
         return em.find(Handout.class, id);
     }
 
-    public List<Handout> findAll() {
-        List<Handout> handouts = em.createQuery("select h from Handout h", Handout.class)
+    public List<Handout> findAll(Long userId) {
+        List<Handout> handouts = em.createQuery("select h from Handout h where h.user.id = :userId", Handout.class)
+                .setParameter("userId", userId)
                 .getResultList();
 
         return handouts;

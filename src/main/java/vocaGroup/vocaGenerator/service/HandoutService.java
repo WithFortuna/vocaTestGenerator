@@ -3,10 +3,8 @@ package vocaGroup.vocaGenerator.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vocaGroup.vocaGenerator.domain.Handout;
-import vocaGroup.vocaGenerator.domain.Student;
-import vocaGroup.vocaGenerator.domain.StudentHandout;
-import vocaGroup.vocaGenerator.domain.Team;
+import vocaGroup.vocaGenerator.domain.*;
+import vocaGroup.vocaGenerator.login.utility.SecurityUtil;
 import vocaGroup.vocaGenerator.repository.HandoutRepository;
 import vocaGroup.vocaGenerator.repository.StudentRepository;
 
@@ -38,8 +36,8 @@ public class HandoutService {
     public Handout findById(Long id) {
         return handoutRepository.findById(id);
     }
-    public List<Handout> findAll() {
-        return handoutRepository.findAll();
+    public List<Handout> findAll(Long userId) {
+        return handoutRepository.findAll(userId);
     }
 
     public List<Handout> findHandoutByTeam(Long id) {
@@ -51,8 +49,9 @@ public class HandoutService {
     @Transactional
     public void passHandout(Long handoutId, Student findStudent) {
         Handout findHandout = handoutRepository.findById(handoutId);
+        User currentUser = SecurityUtil.getCurrentUser();
 
-        StudentHandout studentHandout = new StudentHandout(findStudent,findHandout);
+        StudentHandout studentHandout = new StudentHandout(findStudent,findHandout, currentUser);
         handoutRepository.saveStudentHandout(studentHandout);
     }
 
