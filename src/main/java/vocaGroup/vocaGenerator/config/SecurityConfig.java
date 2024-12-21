@@ -31,6 +31,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login->login
 //                        .loginPage("/login")    //해당 명령어를 끄면, spring security가 login 페이지 렌더링
+                                .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )

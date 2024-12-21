@@ -49,9 +49,7 @@ public class TeamController {
     @PostMapping("/teams/new")
     public String createTeam(@RequestParam String teamName) {
         try {
-            System.out.println("1111111111");
             User currentUser = SecurityUtil.getCurrentUser();
-            System.out.println("222222222");
             teamRepository.save(new Team(teamName, currentUser));
             return "redirect:/teams";
         } catch (Exception e) {
