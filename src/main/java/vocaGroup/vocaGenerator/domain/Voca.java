@@ -2,6 +2,7 @@ package vocaGroup.vocaGenerator.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import vocaGroup.vocaGenerator.domain.enumType.Choose;
 
 @Entity
 @Getter
