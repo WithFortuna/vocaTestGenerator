@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
+import vocaGroup.vocaGenerator.domain.enumType.Choose;
 
 @Getter@Setter
 @Embeddable //embedded 타입은 불변객체가 되도록.

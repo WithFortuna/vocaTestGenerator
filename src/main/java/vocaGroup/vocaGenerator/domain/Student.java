@@ -12,15 +12,17 @@ public class Student {
 
     private String name;
     private int age;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEAM_ID")
     private Team team;
-
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
     public Student() {
     }
 
-    public Student(String name, int age, Team team) {
+    public Student(String name, int age, Team team, User user) {
         this.name = name;
         this.age = age;
         this.team = team;
+        this.user=user;
     }
 }

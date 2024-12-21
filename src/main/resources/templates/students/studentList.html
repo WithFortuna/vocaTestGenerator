@@ -44,7 +44,7 @@
     <tr th:each="student : ${students}">
         <td th:text="${student.name}"></td>
         <td th:text="${student.age}"></td>
-        <td th:text="${student.team}"></td>
+        <td th:text="${student.team.teamName}"></td>
     </tr>
     </tbody>
 </table>

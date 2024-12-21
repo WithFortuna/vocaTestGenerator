@@ -7,38 +7,36 @@
 </head>
 <body>
 <div class="container">
-    <h1>Handout Distribution Result</h1>
-    <div class="team-section">
-        <h2>Team A Handouts</h2>
-        <table class="styled-table">
-            <thead>
-            <tr>
-                <th>Handout Name</th>
-                <th>Week</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="handout : ${handoutTeam1}">
-                <td th:text="${handout.week} + ' 주차'"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="team-section">
-        <h2>Team B Handouts</h2>
-        <table class="styled-table">
-            <thead>
-            <tr>
-                <th>Handout Name</th>
-                <th>Week</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="handout : ${handoutTeam2}">
-                <td th:text="${handout.week} + ' 주차'"></td>
-            </tr>
-            </tbody>
-        </table>
+    <h1>단어장 배포 현황</h1>
+
+    <!-- 팀별로 반복하여 Handouts 표시 -->
+    <div th:each="entry : ${handoutsByTeam}">
+        <div class="team-section">
+            <!-- 팀 이름 출력 -->
+            <h2 th:text="'Team: ' + ${entry.key}"></h2>
+
+            <!-- 학생이 없을 경우 메시지 표시 -->
+            <div th:if="${entry.value == 'No Students'}">
+                <p>속한 학생이 없습니다.</p>
+            </div>
+
+            <!-- Handout 리스트 출력 -->
+            <div th:if="${entry.value != 'No Students'}">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>Handout Name</th>
+                        <th>Week</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="handout : ${entry.value}">
+                        <td th:text="${handout.week} + ' 주차'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>

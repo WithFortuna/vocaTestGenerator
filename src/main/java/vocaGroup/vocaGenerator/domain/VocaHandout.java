@@ -26,14 +26,17 @@ public class VocaHandout {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VOCA_ID", insertable = false, updatable = false)
     private Voca voca;
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
 
     public VocaHandout() {
     }
 
-    public VocaHandout(Voca voca, Handout handout) { //두 엔티티의 FK를 모두 PK로 하므로 생성자는 두 값을 항상 가져야한다.
+    public VocaHandout(Voca voca, Handout handout,User user) { //두 엔티티의 FK를 모두 PK로 하므로 생성자는 두 값을 항상 가져야한다.
         this.id = new VocaHandoutId(handout.getId(),voca.getId());
         this.handout=handout;
         this.voca = voca;
+        this.user = user;
     }
 
     public void showVoca() {

@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h1>Handout and Student Selection</h1>
-    <form action="/handouts/distribute" method="post">
+    <form id="distributeHandoutForm" th:action="@{/handouts/distribute}" method="post">
         <div class="selection-container">
             <div class="handout-section">
                 <h2>Handouts</h2>
@@ -38,8 +38,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="team : ${teams}">
-                        <td><input type="radio" th:id="${'team-' + team}" th:value="${team}" name="teamSelection"></td>
-                        <td th:text="${team}"></td>
+                        <td><input type="radio" th:id="${'team-' + team.teamName}" th:value="${team.id}" name="teamSelectionId"></td>
+                        <td th:text="${team.teamName}"></td>
                     </tr>
                     </tbody>
                 </table>

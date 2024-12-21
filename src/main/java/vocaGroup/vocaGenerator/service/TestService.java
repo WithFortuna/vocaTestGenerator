@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vocaGroup.vocaGenerator.domain.*;
 import vocaGroup.vocaGenerator.domain.DTO.TestForm;
+import vocaGroup.vocaGenerator.login.utility.SecurityUtil;
 import vocaGroup.vocaGenerator.repository.StudentRepository;
 import vocaGroup.vocaGenerator.repository.TestRepository;
 import vocaGroup.vocaGenerator.repository.VocaRepository;
@@ -59,21 +60,22 @@ public class TestService {
         return testRepository.findById(id);
     }
 
-    public List<Test> findAll() {
-        return testRepository.findAll();
+    public List<Test> findAll(Long userId) {
+        return testRepository.findAll(userId);
     }
 
     //배포
     @Transactional
     public void passTest(Long testId, Student student) {
         Test findTest = testRepository.findById(testId);
-        StudentTest studentTest = new StudentTest(findTest);
+        User currentUser = SecurityUtil.getCurrentUser();
+        StudentTest studentTest = new StudentTest(findTest, currentUser);
         studentTest.setStudent(student);
         testRepository.saveStudentTest(studentTest);
     }
 
-    public List<Test> findTestByTeam(Team team) {
-        List<Test> tests = testRepository.findTestByTeam(team);
+    public List<Test> findTestByTeam(Long id) {
+        List<Test> tests = testRepository.findTestByTeam(id);
         return tests;
     }
 }

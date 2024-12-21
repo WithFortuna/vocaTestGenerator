@@ -31,13 +31,13 @@ public class StudentService {
         return studentRepository.findById(id);
     }
 
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public List<Student> findAll(Long userId) {
+        return studentRepository.findAll(userId);
     }
 
 
-    public List<Student> findByTeam(Team team) {
-        List<Student> studentList = studentRepository.findByTeam(team);
+    public List<Student> findByTeam(Long teamId) {
+        List<Student> studentList = studentRepository.findByTeam(teamId);
         return studentList;
     }
 }

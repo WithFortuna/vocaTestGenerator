@@ -10,6 +10,4 @@ public class StudentForm {
     String name;
 //    @NotEmpty(message = "필수값") int값에는 이 에노테이션 불가
     int age;
-    @NotEmpty(message = "필수값")
-    String team;
 }

@@ -14,12 +14,14 @@ public class StudentTest {
     private Student student;
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_ID")
     private Test test;
-
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
     public StudentTest() {
     }
 
-    public StudentTest(Test test) {
+    public StudentTest(Test test, User user) {
         this.test = test;
+        this.user = user;
     }
 
     public void setStudent(Student student) {

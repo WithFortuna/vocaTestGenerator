@@ -14,11 +14,12 @@ public class StudentHandout {
     private Student student;
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "HANDOUT_ID")
     private Handout handout;
-
+    @ManyToOne @JoinColumn(name = "USER_ID")
+    private User user;
     public StudentHandout() {
     }
 
-    public StudentHandout(Student student, Handout handout) {
+    public StudentHandout(Student student, Handout handout, User user) {
         this.student=student;
         this.handout = handout;
     }

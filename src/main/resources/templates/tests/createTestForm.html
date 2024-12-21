@@ -3,32 +3,69 @@
 <head>
     <title>Create Test</title>
     <link rel="stylesheet" type="text/css" href="/css/createTest.css">
+    <style>
+        button.selected {
+            background-color: #d3d3d3; /* 약간 흐린 회색 */
+        }
+        button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #e6e6e6;
+            transform: scale(1.05);
+        }
+    </style>
     <script type="text/javascript">
         window.onload = function() {
+            console.log("Page loaded and script initialized.");
             var selections = [];
 
             window.selectTestType = function(type, vocaId) {
                 console.log("Button clicked - Type:", type, "VocaId:", vocaId);
                 var existing = selections.find(selection => selection.vocaId === vocaId);
                 if (existing) {
+                    console.log("Updating existing selection for vocaId:", vocaId, "to type:", type);
                     existing.type = type;
                 } else {
+                    console.log("Adding new selection for vocaId:", vocaId, "with type:", type);
                     selections.push({vocaId: vocaId, type: type});
                 }
                 updateTestSelectionsInput();
+                updateButtonStyles(vocaId, type);
             }
 
             function updateTestSelectionsInput() {
                 var jsonValue = JSON.stringify(selections);
+                console.log("Updating hidden input with testSelections:", jsonValue);
                 document.getElementById('testSelections').value = jsonValue;
-                console.log("testSelections value:", jsonValue);
+            }
+
+            function updateButtonStyles(vocaId, selectedType) {
+                console.log("Updating button styles for vocaId:", vocaId, "with selectedType:", selectedType);
+                var buttons = document.querySelectorAll(`button[data-voca-id="${vocaId}"]`);
+                buttons.forEach(button => {
+                    if (button.dataset.type === selectedType) {
+                        console.log("Setting button as selected for type:", selectedType);
+                        button.classList.add('selected');
+                    } else {
+                        button.classList.remove('selected');
+                    }
+                });
             }
 
             window.validateForm = function() {
+                console.log("Validating form submission. Current selections:", selections);
                 if (selections.length === 0) {
+                    console.log("Validation failed: No selections made.");
                     alert("적어도 하나의 단어를 선택해주세요.");
                     return false;
                 }
+                console.log("Validation successful. Proceeding with form submission.");
                 return true;
             }
         }
@@ -53,8 +90,10 @@
             <td th:text="${vocaHandout.voca.english}"></td>
             <td th:text="${vocaHandout.voca.korean}"></td>
             <td>
-                <button type="button" th:onclick="'selectTestType(\'english\', ' + ${vocaHandout.voca.id} + ')'">영어 출제</button>
-                <button type="button" th:onclick="'selectTestType(\'korean\', ' + ${vocaHandout.voca.id} + ')'">한국어 출제</button>
+                <button type="button" th:onclick="'selectTestType(\'english\', ' + ${vocaHandout.voca.id} + ')'"
+                        th:attr="data-voca-id=${vocaHandout.voca.id}, data-type='english'">영어 출제</button>
+                <button type="button" th:onclick="'selectTestType(\'korean\', ' + ${vocaHandout.voca.id} + ')'"
+                        th:attr="data-voca-id=${vocaHandout.voca.id}, data-type='korean'">한국어 출제</button>
             </td>
         </tr>
         </tbody>

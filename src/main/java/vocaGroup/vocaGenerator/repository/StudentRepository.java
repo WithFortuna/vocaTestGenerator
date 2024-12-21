@@ -28,15 +28,17 @@ public class StudentRepository {
         return em.find(Student.class, id);
     }
 
-    public List<Student> findAll() {
-        List<Student> findStudents = em.createQuery("select s from Student s ", Student.class)
+    public List<Student> findAll(Long userId) {
+        List<Student> findStudents = em.createQuery("select s from Student s where s.user.id = :userId ", Student.class)
+                .setParameter("userId",userId)
                 .getResultList();
         return findStudents;
     }
 
-    public List<Student> findByTeam(Team team) {
-        List<Student> studentList = em.createQuery("select s from Student s where s.team = :team", Student.class)
-                .setParameter("team",team)
+    public List<Student> findByTeam(Long teamId) {
+
+        List<Student> studentList = em.createQuery("select s from Student s where s.team.id = :teamId", Student.class)
+                .setParameter("teamId",teamId)
                 .getResultList();
         return studentList;
     }

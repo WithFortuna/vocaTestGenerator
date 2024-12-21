@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +12,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vocaGroup.vocaGenerator.domain.*;
 import vocaGroup.vocaGenerator.domain.DTO.TestForm;
+import vocaGroup.vocaGenerator.login.utility.SecurityUtil;
+import vocaGroup.vocaGenerator.repository.TeamRepository;
 import vocaGroup.vocaGenerator.service.HandoutService;
 import vocaGroup.vocaGenerator.service.StudentService;
 import vocaGroup.vocaGenerator.service.TestService;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,11 +30,13 @@ public class TestController {
     private final TestService testService;
     private final StudentService studentService;
     private final ObjectMapper objectMapper;
+    private final TeamRepository teamRepository;
 
     //==============================================================test생성
     @GetMapping("tests/new")
     public String createTest1(Model model) {
-        List<Handout> handouts = handoutService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Handout> handouts = handoutService.findAll(userId);
         model.addAttribute("handouts", handouts);
         return "/handouts/handoutList2";
     }
@@ -57,8 +62,9 @@ public class TestController {
             System.out.println("Received testSelections: " + testSelections); //json 배열 출력
             System.out.println("==========================================================");
         }
+        User currentUser = SecurityUtil.getCurrentUser();
         Handout findHandout = handoutService.findById(handoutId);
-        Test test = new Test(week, findHandout);
+        Test test = new Test(week, findHandout, currentUser);
         testService.save(test);
         try {
             List<TestForm> testForms = objectMapper.readValue(testSelections, new TypeReference<List<TestForm>>() {
@@ -70,7 +76,7 @@ public class TestController {
             // testForms 리스트를 사용하여 테스트를 생성
             testService.createVocaTest(testForms, test.getId());
 
-            return "redirect:/tests/new"; // 테스트 목록 페이지로 리다이렉트
+            return "redirect:/"; // 홈 페이지로 리다이렉트
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             model.addAttribute("error", "Failed to process test selections.");
@@ -84,7 +90,9 @@ public class TestController {
     //==================================================================test조회
     @GetMapping("/tests")
     public String showList(Model model) {
-        List<Test> tests = testService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+
+        List<Test> tests = testService.findAll(userId);
         model.addAttribute("tests", tests);
         return "/tests/testList";
     }
@@ -92,6 +100,14 @@ public class TestController {
     @GetMapping("/tests/{id}")
     public String showDetail(@PathVariable Long id, Model model) {
         Test findTest = testService.findById(id);
+        boolean isOwner = SecurityUtil.getCurrentUser().getId().equals(findTest.getUser().getId());
+
+        if (!isOwner) {
+
+            model.addAttribute("errors", "권한 없음");
+            return "/tests/testDetail";
+        }
+
         List<VocaBlock> vocaBlocks = findTest.getTestVocabs();
         model.addAttribute("test", findTest);
         model.addAttribute("vocaBlocks", vocaBlocks);
@@ -103,19 +119,22 @@ public class TestController {
 
     @GetMapping("tests/distribute")
     public String distributeTest(Model model) {
-        List<Test> tests = testService.findAll();
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Test> tests = testService.findAll(userId);
         model.addAttribute("tests", tests);
 
-        List<Team> teams = Arrays.asList(Team.values());
+
+        List<Team> teams = teamRepository.findAll(userId);
         model.addAttribute("teams", teams);
 
         return "/tests/distributeTest";
     }
 
     @PostMapping("tests/distribute")
-    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Team teamSelection, Model model) {
+    public String distribute(@RequestParam List<Long> testSelections, @RequestParam Long teamSelectionId, Model model) {
+        //Test를 선택된 Team에게 배포
         System.out.println("=======================================================");
-        List<Student> students = studentService.findByTeam(teamSelection);
+        List<Student> students = studentService.findByTeam(teamSelectionId);
         System.out.println("=======================================================");
         for (Long id : testSelections) {
             for (Student s : students) {
@@ -124,20 +143,25 @@ public class TestController {
 
         }
 
-        List<Team> teams = Arrays.asList(Team.values());
+        //Team별 Test조회
+        Long userId = SecurityUtil.getCurrentUser().getId();
+        List<Team> teams = teamRepository.findAll(userId);
+        Map<String, Object> testsByTeam = new HashMap<>();
+        for (Team team : teams) {
+            //Team에 속한 학생이 없어서 test가 안보이는 경우
+            boolean isTeamNoStudents = studentService.findByTeam(team.getId()).isEmpty();
+            if (isTeamNoStudents) {
+                testsByTeam.put(team.getTeamName(), "No Students");      //문자열 삽입
+            } else {
+                //Team에 속한 학생이 존재하는 경우
+                List<Test> tests = testService.findTestByTeam(team.getId());
+                testsByTeam.put(team.getTeamName(), tests);
+            }
+
+        }
+
         model.addAttribute("teams", teams);
-        List<Test> testTeam1 = testService.findTestByTeam(Team.A);
-        List<Test> testTeam2 = testService.findTestByTeam(Team.B);
-/*
-
-        System.out.println("=====================================================");
-        System.out.println(testTeam1);
-        System.out.println(testTeam2);
-        System.out.println("=====================================================");
-*/
-
-        model.addAttribute("testTeam1", testTeam1);
-        model.addAttribute("testTeam2", testTeam2);
+        model.addAttribute("testsByTeam", testsByTeam);
 
         return "/tests/distributeResult";
     }
