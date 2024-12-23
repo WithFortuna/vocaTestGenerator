@@ -22,6 +22,7 @@ public class StudentHandout {
     public StudentHandout(Student student, Handout handout, User user) {
         this.student=student;
         this.handout = handout;
+        this.user = user;
     }
 
     public void setStudent(Student student) {
