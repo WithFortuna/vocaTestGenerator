@@ -1,18 +1,19 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/vocaGenerator
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    datasource:
+      url: jdbc:mysql://localhost:3306/voca_generator #db명: voca_generator, connection명: VocaGeneratorDBInstance
+      username: root
+      password: 1111
+#      driver-class-name: com.mysql.cj.jdbc.Driver -> 자동설정됨
 
-  jpa:
-    hibernate:
-      ddl-auto: update #테이블 자동 drop 후 create하는 옵션
-    properties:
+    jpa:
       hibernate:
-        format_sql: true
-        show_sql: true #sql 쿼리 로그에 띄우기
+        ddl-auto: create # 개발 중에는 update를 사용, 운영 환경에서는 none 또는 validate 사용 #테이블 자동 drop 후 create하는 옵션
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQLDialect
+          format_sql: true
+          show_sql: true  #sql 쿼리 로그에 띄우기
+
 logging:
   level:
     org.hibernate.sql: debug
-  #org.hibernate.type: trace
