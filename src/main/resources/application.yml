@@ -7,7 +7,7 @@ spring:
 
     jpa:
       hibernate:
-        ddl-auto: create # 개발 중에는 update를 사용, 운영 환경에서는 none 또는 validate 사용 #테이블 자동 drop 후 create하는 옵션
+        ddl-auto: update # 개발 중에는 update를 사용, 운영 환경에서는 none 또는 validate 사용 #테이블 자동 drop 후 create하는 옵션
       properties:
         hibernate:
           dialect: org.hibernate.dialect.MySQLDialect
