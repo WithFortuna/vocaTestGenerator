@@ -67,17 +67,16 @@
   
 # 3. 화면 미리보기
    - **화면:** 주요 페이지나 화면 구성 요소 소개.
-    - 사용자 관리(회원가입, 로그인)LoginCotroller
-        ![회원가입](image0.png)
-        ![로그인1](image1.png)
+   - 사용자 관리(회원가입, 로그인)LoginCotroller
+     ![회원가입](보고서/image0.png)
+     ![로그인1](보고서/image1.png)
 
-    - 학생 관리 (학생 등록, 팀 관리)StudentControllerTeamController.
-        ![학생 목록](보고서/image3.png)
+   - 학생 관리 (학생 등록, 팀 관리)StudentControllerTeamController.
+     ![학생 목록](보고서/image3.png)
 
-    - 단어 관리 (단어 등록, 단어 조회)VocaController.
-        ![단어 등록](보고서/image4.png)
-        ![단어 조회](보고서/image5.png)
+   - 단어 관리 (단어 등록, 단어 조회)VocaController.
+     ![단어 등록](보고서/image4.png)
+     ![단어 조회](보고서/image5.png)
 
-    - 테스트 생성 및 배포 (핸드아웃 기반 테스트 제작)TestControllerTest.
-    
-    ![핸드아웃 기반으로 테스트 생성](보고서/image8.png)
+   - 테스트 생성 및 배포 (핸드아웃 기반 테스트 제작)TestControllerTest.
+     ![핸드아웃 기반으로 테스트 생성](보고서/image8.png)
